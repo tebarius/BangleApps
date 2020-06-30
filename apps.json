@@ -1050,11 +1050,11 @@
   { "id": "marioclock",
     "name": "Mario Clock",
     "icon": "marioclock.png",
-    "version":"0.12",
+    "version":"0.13",
     "description": "Animated retro Mario clock, with Gameboy style 8-bit grey-scale graphics.",
     "tags": "clock,mario,retro",
     "type": "clock",
-    "allow_emulator":true,
+    "allow_emulator":false,
     "readme": "README.md",
     "storage": [
       {"name":"marioclock.app.js","url":"marioclock-app.js"},
@@ -1900,7 +1900,7 @@
     "name": "Vertical watch face",
     "shortName":"Vertical Face",
     "icon": "app.png",
-    "version":"0.04",
+    "version":"0.05",
     "description": "A simple vertical watch face with the date.",
     "tags": "clock",
     "type":"clock",
@@ -2045,6 +2045,31 @@
     "storage": [
       {"name":"widancs.wid.js","url":"ancs.min.js"},
       {"name":"widancs.settings.js","url":"settings.js"}
+    ]
+  },
+  {
+    "id": "cprassist",
+    "name":"CPR Assist",
+    "icon":"cprassist-icon.png",
+    "version": "0.01",
+    "readme": "README.md",
+    "description": "Provides assistance while performing a CPR",
+    "tags": "tool,firstaid",
+    "allow_emulator": true,
+    "storage": [
+      {
+        "name": "cprassist.app.js",
+        "url": "cprassist.js"
+      },
+      {
+        "name": "cprassist.img",
+        "url": "cprassist-icon.js",
+        "evaluate": true
+      },
+      {
+        "name": "cprassist.settings.js",
+        "url": "settings.js"
+      }
     ]
   }
 ]
