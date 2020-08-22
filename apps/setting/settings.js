@@ -67,22 +67,7 @@ function showMainMenu() {
     '': { 'title': 'Settings' },
     'Make Connectable': ()=>makeConnectable(),
     'App/Widget Settings': ()=>showAppSettingsMenu(),
-    'BLE': {
-      value: settings.ble,
-      format: boolFormat,
-      onchange: () => {
-        settings.ble = !settings.ble;
-        updateSettings();
-      }
-    },
-    'Programmable': {
-      value: settings.blerepl,
-      format: boolFormat,
-      onchange: () => {
-        settings.blerepl = !settings.blerepl;
-        updateSettings();
-      }
-    },
+    'BLE': ()=>showBLEMenu(),
     'Debug Info': {
       value: settings.log,
       format: v => v ? "Show" : "Hide",
@@ -132,6 +117,99 @@ function showMainMenu() {
     '< Back': ()=>load()
   };
   return E.showMenu(mainmenu);
+}
+
+function showBLEMenu() {
+  E.showMenu({
+    'BLE': {
+      value: settings.ble,
+      format: boolFormat,
+      onchange: () => {
+        settings.ble = !settings.ble;
+        updateSettings();
+      }
+    },
+    'Programmable': {
+      value: settings.blerepl,
+      format: boolFormat,
+      onchange: () => {
+        settings.blerepl = !settings.blerepl;
+        updateSettings();
+      }
+    },
+    'Passkey BETA': {
+      value: settings.passkey?settings.passkey:"none",
+      onchange: () => setTimeout(showPasskeyMenu) // graphical_menu redraws after the call
+    },
+    'Whitelist': {
+      value: settings.whitelist?(settings.whitelist.length+" devs"):"off",
+      onchange: () => setTimeout(showWhitelistMenu) // graphical_menu redraws after the call
+    },
+    '< Back': ()=>showMainMenu()
+  });
+}
+
+function showPasskeyMenu() {
+  var menu = {
+    "Disable" : () => {
+      settings.passkey = undefined;
+      updateSettings();
+      showBLEMenu();
+    }
+  };
+  if (!settings.passkey || settings.passkey.length!=6)
+    settings.passkey = "123456";
+  for (var i=0;i<6;i++) (function(i){
+    menu[`Digit ${i+1}`] = {
+      value : 0|settings.passkey[i],
+      min: 0, max: 9,
+      onchange: v => {
+        var p = settings.passkey.split("");
+        p[i] = v;
+        settings.passkey = p.join("");
+        updateSettings();
+      }
+    };
+  })(i);
+  menu['< Back']=()=>showBLEMenu();
+  E.showMenu(menu);
+}
+
+function showWhitelistMenu() {
+  var menu = {
+    "Disable" : () => {
+      settings.whitelist = undefined;
+      updateSettings();
+      showBLEMenu();
+    }
+  };
+  if (settings.whitelist) settings.whitelist.forEach(function(d){
+    menu[d.substr(0,17)] = function() {
+      E.showPrompt('Remove\n'+d).then((v) => {
+        if (v) {
+          settings.whitelist.splice(settings.whitelist.indexOf(d),1);
+          updateSettings();
+        }
+        setTimeout(showWhitelistMenu, 50);
+      });
+    }
+  });
+  menu['Add Device']=function() {
+    E.showAlert("Connect device\nto add to\nwhitelist","Whitelist").then(function() {
+      NRF.removeAllListeners('connect');
+      showWhitelistMenu();
+    });
+    NRF.removeAllListeners('connect');
+    NRF.on('connect', function(addr) {
+      if (!settings.whitelist) settings.whitelist=[];
+      settings.whitelist.push(addr);
+      updateSettings();
+      NRF.removeAllListeners('connect');
+      showWhitelistMenu();
+    });
+  };
+  menu['< Back']=()=>showBLEMenu();
+  E.showMenu(menu);
 }
 
 function showLCDMenu() {

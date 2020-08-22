@@ -194,10 +194,10 @@ and which gives information about the app for the Launcher.
   "name":"Short Name", // for Bangle.js menu
   "icon":"*7chname", // for Bangle.js menu
   "src":"-7chname", // source file
-  "type":"widget/clock/app", // optional, default "app"
-     // if this is 'widget' then it's not displayed in the menu
+  "type":"widget/clock/app/bootloader", // optional, default "app"
+     // if this is 'widget' then it's not displayed in the menu  
      // if it's 'clock' then it'll be loaded by default at boot time
-  "dependencies" : { "notify":"type" } // optional, app 'types' we depend on
+     // if this is 'bootloader' then it's code that is run at boot time, but is not in a menu  
   "version":"1.23",
      // added by BangleApps loader on upload based on apps.json
   "files:"file1,file2,file3",
@@ -221,7 +221,8 @@ and which gives information about the app for the Launcher.
   "description": "...",       // long description (can contain markdown)
   "type":"...",               // optional(if app) - 'app'/'widget'/'launch'/'bootloader'
   "tags": "",                 // comma separated tag list for searching
-
+  "dependencies" : { "notify":"type" } // optional, app 'types' we depend on
+                              // for instance this will use notify/notifyfs is they exist, or will pull in 'notify'
   "readme": "README.md",      // if supplied, a link to a markdown-style text file
                               // that contains more information about this app (usage, etc)
                               // A 'Read more...' link will be added under the app
