@@ -24,3 +24,5 @@
 0.20: Fix set time menu, allow dates to roll over
 0.21: Add passkey pairing option (BETA)
       Add whitelist option (fix #78)
+0.22: Move HID to BLE menu
+0.23: Change max time offset to 13 for NZ summer daylight time (NZDT)
